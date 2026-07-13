@@ -533,10 +533,11 @@ def get_telemetry(crew_id: int, telemetry_session: Optional[str] = Cookie(None),
     }
 
 @app.post("/logout")
-def logout(response: Response):
-    response.delete_cookie("session_token")
-    response.delete_cookie("telemetry_session")
-    return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+def logout():
+    res = RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+    res.delete_cookie("session_token")
+    res.delete_cookie("telemetry_session")
+    return res
 
 if __name__ == "__main__":
     import uvicorn

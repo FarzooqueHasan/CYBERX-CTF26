@@ -14,12 +14,12 @@
             <div class="nav-links">
                 {% if team %}
                     <a href="/dashboard" class="nav-item">Dashboard</a>
-                    <span class="nav-team">OPERATOR: {{ team.team_name }}</span>
+                    <span class="nav-team">User: {{ team.team_name }}</span>
                     <form action="/logout" method="post" style="display:inline;">
-                        <button type="submit" class="nav-item" style="background:none; border:none; cursor:pointer; font-family:inherit;">LOGOUT</button>
+                        <button type="submit" class="nav-item" style="background:none; border:none; cursor:pointer; font-family:inherit;">Logout</button>
                     </form>
                 {% else %}
-                    <a href="/register" class="btn btn-purple" style="padding: 0.4rem 1.2rem; font-size: 0.85rem;">INITIALIZE SESSION</a>
+                    <a href="/register" class="btn btn-purple" style="padding: 0.4rem 1.2rem; font-size: 0.85rem;">Login</a>
                 {% endif %}
             </div>
         </div>

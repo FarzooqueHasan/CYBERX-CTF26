@@ -1,47 +1,35 @@
 {% extends "base.html" %}
 
-{% block title %}CyberX CTF - Ground Station Intercept{% endblock %}
+{% block title %}CyberX CTF - Induction{% endblock %}
 
 {% block content %}
-<div class="level-container">
+<div class="level-container" style="max-width: 650px; margin: 4rem auto;">
     <div style="text-align: center; margin-bottom: 3rem;">
-        <h1 style="font-size: 2.25rem; margin-bottom: 0.5rem; letter-spacing: -0.5px;">Operation: AEROSS Downlink</h1>
-        <p style="font-family: var(--font-mono); color: var(--secondary); font-size: 0.9rem;">SECURE NETWORK INDUCTION PORTAL v3.11.6</p>
+        <h1 style="font-size: 2.25rem; margin-bottom: 0.5rem; letter-spacing: -0.5px;">CyberX Club Induction</h1>
+        <p style="font-family: var(--font-mono); color: var(--secondary); font-size: 0.9rem;">SECURE CHALLENGE PORTAL</p>
     </div>
 
-    <div class="terminal">
-        <div class="terminal-header">
-            <span class="terminal-dot"></span>
-            <span class="terminal-dot"></span>
-            <span class="terminal-dot"></span>
-            <span class="terminal-title">AEROSS_DECODE.SH</span>
-        </div>
-        <div class="terminal-body">
-            <p class="terminal-prompt">cat mission_brief.txt</p>
-            <p style="color: var(--text-primary); margin-bottom: 1.5rem; opacity: 0.9;">
-                [+] OPERATION SUMMARY:<br>
-                A ground station controlling the AEROSS-3 satellite has been compromised. The operators managed to lock down their terminal, rotating session passwords and encrypting telemetry. However, in their haste, they left behind traces of their system settings and local logs.<br><br>
-                [+] OBJECTIVES:<br>
-                1. INTERCEPT: Query local server paths and recover the encoded signal log.<br>
-                2. DECRYPT: Use the recovered signal to extract the raw JSON data block containing operator identifiers.<br>
-                3. BREACH: Authenticate with the dashboard and pivot to view privileged administrative telemetry.<br>
-                4. RECOVER: Locate the crashed device memory image, analyze the stego layout, and extract the system override flags.<br><br>
-                [!] NO SQL INJECTION IS PERMITTED OR REQUIRED. ALL LOGIC IS SECURED SERVER-SIDE.
-            </p>
-            <p class="terminal-prompt">status --check</p>
-            <p style="color: var(--secondary); opacity: 0.9;">
-                [!] Connection: SECURE<br>
-                [!] Database status: ACTIVE<br>
-                [!] Awaiting operator credentials to initialize decryption pipeline...
-            </p>
+    <div class="cyber-card" style="margin-bottom: 3rem; padding: 2rem;">
+        <h3 style="font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1.25rem;">Challenge Overview</h3>
+        <p style="color: var(--text-primary); line-height: 1.7; margin-bottom: 1.5rem;">
+            Welcome to the official CyberX Club Induction CTF. This pipeline tests foundational skills in cybersecurity across four distinct categories:
+        </p>
+        <ul style="color: var(--text-muted); line-height: 1.8; margin-bottom: 2rem; padding-left: 1.2rem;">
+            <li><strong>Recon & Log Analysis</strong>: Directory enumeration and log parsing.</li>
+            <li><strong>Decryption & Key Derivation</strong>: Cryptographic key expansion and symmetric payload decryption.</li>
+            <li><strong>Identity & Access Control</strong>: Inspecting network APIs and identifying privilege escalation flaws.</li>
+            <li><strong>Image Steganography Analysis</strong>: Bitwise LSB extraction using custom Python scripts.</li>
+        </ul>
+        <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.15); border-radius: 6px; padding: 1rem; font-size: 0.85rem; color: #f87171;">
+            <strong>Notice:</strong> Out-of-bounds scanning, directory brute-forcing, and SQL injection are strictly prohibited. All answers are derived from logical analysis.
         </div>
     </div>
 
     <div style="text-align: center;">
         {% if team %}
-            <a href="/dashboard" class="btn btn-purple">Return to Operation Center</a>
+            <a href="/dashboard" class="btn">Access Dashboard</a>
         {% else %}
-            <a href="/register" class="btn">Initialize Operator Session</a>
+            <a href="/register" class="btn" style="padding: 0.8rem 2.5rem; font-size: 1rem;">Access Portal</a>
         {% endif %}
     </div>
 </div>
