@@ -38,12 +38,12 @@ app = FastAPI(title="CyberX Club Induction CTF")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, "static")
 TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
-NON_PUBLIC_DIR = os.path.join(BASE_DIR, "non_public")
 
-os.makedirs(STATIC_DIR, exist_ok=True)
-os.makedirs(os.path.join(STATIC_DIR, "css"), exist_ok=True)
-os.makedirs(os.path.join(STATIC_DIR, "js"), exist_ok=True)
-os.makedirs(TEMPLATES_DIR, exist_ok=True)
+if os.environ.get("VERCEL"):
+    NON_PUBLIC_DIR = "/tmp/non_public"
+else:
+    NON_PUBLIC_DIR = os.path.join(BASE_DIR, "non_public")
+
 os.makedirs(NON_PUBLIC_DIR, exist_ok=True)
 
 # Mount static files

@@ -1,7 +1,10 @@
 import sqlite3
 import os
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "ctf.db")
+if os.environ.get("VERCEL"):
+    DB_PATH = "/tmp/ctf.db"
+else:
+    DB_PATH = os.path.join(os.path.dirname(__file__), "ctf.db")
 
 def get_db():
     conn = sqlite3.connect(DB_PATH)
