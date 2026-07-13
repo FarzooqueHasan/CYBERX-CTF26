@@ -179,7 +179,7 @@ def index(request: Request, session_token: Optional[str] = Cookie(None)):
     team = None
     if session_token:
         team = get_team_from_db(session_token)
-    res = templates.TemplateResponse("index.html", {"request": request, "team": team})
+    res = templates.TemplateResponse(request=request, name="index.html", context={"request": request, "team": team})
     res.headers["X-Ops-Note"] = "check /ops/"
     return res
 
@@ -189,7 +189,7 @@ def register_page(request: Request, session_token: Optional[str] = Cookie(None))
         team = get_team_from_db(session_token)
         if team:
             return RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
-    return templates.TemplateResponse("register.html", {"request": request})
+    return templates.TemplateResponse(request=request, name="register.html", context={"request": request})
 
 @app.post("/register")
 def register_team(team_name: str = Form(...)):
@@ -268,7 +268,7 @@ def dashboard(request: Request, team=Depends(get_active_team)):
     team_hash = hashlib.md5(team["team_name"].strip().lower().encode()).hexdigest()
     log_filename = f"log_{team_hash}.log"
     
-    return templates.TemplateResponse("dashboard.html", {
+    return templates.TemplateResponse(request=request, name="dashboard.html", context={
         "request": request,
         "team": team,
         "levels": levels_status,
@@ -300,19 +300,19 @@ def level_page(request: Request, telemetry_session: Optional[str] = Cookie(None)
     }
     
     if level == 1:
-        return templates.TemplateResponse("level1.html", context)
+        return templates.TemplateResponse(request=request, name="level1.html", context=context)
     elif level == 2:
-        return templates.TemplateResponse("level2.html", context)
+        return templates.TemplateResponse(request=request, name="level2.html", context=context)
     elif level == 3:
         # Check telemetry session
         sess = get_telemetry_session(telemetry_session)
         if sess and sess["team_id"] == team["id"]:
             context["own_crew_id"] = sess["crew_id"]
-            return templates.TemplateResponse("level3_dashboard.html", context)
+            return templates.TemplateResponse(request=request, name="level3_dashboard.html", context=context)
         else:
-            return templates.TemplateResponse("level3.html", context)
+            return templates.TemplateResponse(request=request, name="level3.html", context=context)
     elif level == 4:
-        return templates.TemplateResponse("level4.html", context)
+        return templates.TemplateResponse(request=request, name="level4.html", context=context)
         
     raise HTTPException(status_code=404, detail="Level not found")
     
