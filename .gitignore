@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.pyo
+ctf.db
+recovered_test.bmp
+*.log

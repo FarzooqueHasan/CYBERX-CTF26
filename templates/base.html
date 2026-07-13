@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CyberX CTF - Induction{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <a href="/" class="logo">CyberX Club</a>
+            <div class="nav-links">
+                {% if team %}
+                    <a href="/dashboard" class="nav-item">Dashboard</a>
+                    <span class="nav-team">OPERATOR: {{ team.team_name }}</span>
+                    <form action="/logout" method="post" style="display:inline;">
+                        <button type="submit" class="nav-item" style="background:none; border:none; cursor:pointer; font-family:inherit;">LOGOUT</button>
+                    </form>
+                {% else %}
+                    <a href="/register" class="btn btn-purple" style="padding: 0.4rem 1.2rem; font-size: 0.85rem;">INITIALIZE SESSION</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="/static/js/main.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

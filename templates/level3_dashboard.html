@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}CyberX CTF - System Dashboard{% endblock %}
+
+{% block content %}
+<div class="level-container" style="max-width: 900px;">
+    <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end;">
+        <div>
+            <a href="/dashboard" style="color: var(--secondary); text-decoration: none; font-size: 0.9rem;">&lt; Return to Dashboard</a>
+            <h1 style="margin-top: 1rem; font-size: 1.8rem; letter-spacing: -0.5px;">Node 03: Identity & Access Control</h1>
+            <p style="color: var(--text-muted);">Status: {% if solved %}<span style="color: var(--success); font-weight: 600;">Solved</span>{% else %}<span style="color: var(--primary);">Active</span>{% endif %}</p>
+        </div>
+        <div style="text-align: right;">
+            <p style="font-family: var(--font-mono); font-size: 0.85rem; margin-bottom: 0;">Session: <span style="color: var(--secondary); font-weight: 600;">Active</span></p>
+        </div>
+    </div>
+
+    <!-- Telemetry Display panel -->
+    <div class="telemetry-dashboard" style="margin-bottom: 3rem;">
+        <div class="telemetry-header">
+            <h3 style="font-size: 1rem; font-weight: 600; margin: 0;">System User Profile Feed</h3>
+            <div class="telemetry-status">
+                <span class="status-indicator"></span>
+                <span>Active Status</span>
+            </div>
+        </div>
+        
+        <div class="telemetry-grid">
+            <div class="telemetry-sidebar">
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div>
+                        <div class="telemetry-label">Crew ID</div>
+                        <div class="telemetry-value" id="crew-id-val">--</div>
+                    </div>
+                    <div>
+                        <div class="telemetry-label">Username</div>
+                        <div class="telemetry-value" id="username-val" style="font-size: 1.1rem; font-family: var(--font-mono);">--</div>
+                    </div>
+                    <div>
+                        <div class="telemetry-label">Role</div>
+                        <div class="telemetry-value" id="role-val" style="font-size: 1.1rem; color: var(--text-muted);">--</div>
+                    </div>
+                    <div style="border-top: 1px solid var(--border-color); padding-top: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                        <div>
+                            <div class="telemetry-label">System Version</div>
+                            <div class="telemetry-value" id="temp-val" style="font-size: 1.1rem;">v3.1</div>
+                        </div>
+                        <div>
+                            <div class="telemetry-label">Security Status</div>
+                            <div class="telemetry-value" id="signal-val" style="font-size: 1.1rem; color: var(--success);">Operational</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <div class="telemetry-notes-title">USER NOTES & LOGISTICS NOTEBOOK</div>
+                <div class="telemetry-notes" id="notes-val">Fetching live user profile record...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flag Submission Panel -->
+    <div class="cyber-card" style="margin-bottom: 3rem;">
+        <h3 style="font-size: 1.05rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem;">Submit Administrative Flag</h3>
+        <p>Access the administrative telemetry record and retrieve the administrator system override flag to solve this node.</p>
+        
+        <div class="challenge-box" style="margin-top: 1.5rem; padding: 1.5rem;">
+            <form id="flag-submit-form" action="/level/submit" method="POST">
+                <div class="form-group">
+                    <label for="flag" class="form-label">System Override Key</label>
+                    <input type="text" id="flag" name="flag" required placeholder="CYBERX{flag_here}" class="form-input code-font" {% if solved %}disabled value="CYBERX{tru5t_but_v3r1fy}"{% endif %}>
+                </div>
+                
+                <div id="response-alert" class="alert" style="display: none;"></div>
+
+                {% if not solved %}
+                    <button type="submit" class="btn" style="width: 100%;">Submit Flag</button>
+                {% else %}
+                    <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 6px; padding: 1rem; text-align: center; color: var(--success); font-size: 0.9rem;">
+                        [+] Flag verified. Node 03 completed.
+                    </div>
+                {% endif %}
+            </form>
+        </div>
+
+        <!-- Hints section -->
+        <div class="hints-container">
+            <h4 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 1rem;">Hints</h4>
+            
+            <div class="hint-item">
+                <div class="hint-trigger" data-hint-idx="1">
+                    <span>Hint 1: Inspect API Request</span>
+                    <span class="hint-icon">▶</span>
+                </div>
+                <div class="hint-content" id="hint-content-1"></div>
+            </div>
+
+            <div class="hint-item">
+                <div class="hint-trigger" data-hint-idx="2">
+                    <span>Hint 2: Administrative Control</span>
+                    <span class="hint-icon">▶</span>
+                </div>
+                <div class="hint-content" id="hint-content-2"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const ownCrewId = {{ own_crew_id }};
+        
+        fetch(`/api/telemetry?crew_id=${ownCrewId}`)
+            .then(res => {
+                if (!res.ok) throw new Error('Data fetch blocked');
+                return res.json();
+            })
+            .then(data => {
+                document.getElementById('crew-id-val').textContent = data.crew_id;
+                document.getElementById('username-val').textContent = data.username;
+                document.getElementById('role-val').textContent = data.role;
+                document.getElementById('notes-val').textContent = data.telemetry.notes || 'No logs entered.';
+            })
+            .catch(err => {
+                document.getElementById('notes-val').textContent = 'Error: Failed to fetch user profile feed.';
+            });
+    });
+</script>
+{% endblock %}

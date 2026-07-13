@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}CyberX CTF - Level 4{% endblock %}
+
+{% block content %}
+<div class="level-container">
+    <div style="margin-bottom: 2rem;">
+        <a href="/dashboard" style="color: var(--secondary); text-decoration: none; font-size: 0.9rem;">&lt; Return to Dashboard</a>
+        <h1 style="margin-top: 1rem; font-size: 1.8rem; letter-spacing: -0.5px;">Node 04: Image Steganography Analysis</h1>
+        <p style="color: var(--text-muted);">Status: {% if solved %}<span style="color: var(--success); font-weight: 600;">Solved</span>{% else %}<span style="color: var(--primary);">Active</span>{% endif %}</p>
+    </div>
+
+    <div class="cyber-card">
+        <h3 style="font-size: 1.05rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem;">Challenge Description</h3>
+        <p>Download the image file <code>recovered.bmp</code> and the stego decoder script <code>signal_decoder.py</code>. The image contains hidden encrypted data.</p>
+        <p>You must execute the decoder script with the correct passphrase to extract the flag. Decrypting with an incorrect passphrase will output random noise; ensure the key derivation is exact.</p>
+        
+        <div style="background: rgba(59, 130, 246, 0.03); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem; font-family: var(--font-sans); font-size: 0.95rem; line-height: 1.8;">
+            <span style="color: var(--text-primary); font-weight: 600;">DECRYPTION METADATA:</span><br>
+            - Passphrase formula: **{{ md5_hint }}** (lowercase hex characters)<br>
+            - Command: <code style="color:var(--secondary); font-family: var(--font-mono);">python signal_decoder.py extract recovered.bmp &lt;passphrase&gt;</code><br>
+            - Note: The extracted output will automatically reveal the flag in `CYBERX{...}` format.
+        </div>
+
+        <div class="challenge-action" style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+            <a href="/level/download" class="btn" style="font-size: 0.9rem; padding: 0.6rem 1.5rem;">Download recovered.bmp</a>
+            <a href="/level/download/script" class="btn btn-purple" style="font-size: 0.9rem; padding: 0.6rem 1.5rem;">Download decoder script</a>
+        </div>
+
+        <div class="challenge-box" style="margin-top: 2rem;">
+            <form id="flag-submit-form" action="/level/submit" method="POST">
+                <div class="form-group">
+                    <label for="flag" class="form-label">Submit Final Flag</label>
+                    <input type="text" id="flag" name="flag" required placeholder="CYBERX{flag_here}" class="form-input code-font" {% if solved %}disabled value="CYBERX{1nduct10n_c0mpl3t3_w3lc0m3}"{% endif %}>
+                </div>
+                
+                <div id="response-alert" class="alert" style="display: none;"></div>
+
+                {% if not solved %}
+                    <button type="submit" class="btn" style="width: 100%;">Submit Flag</button>
+                {% else %}
+                    <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 6px; padding: 1rem; text-align: center; color: var(--success); font-size: 0.9rem;">
+                        [+] Flag verified. Node 04 completed. CyberX Induction completed successfully.
+                    </div>
+                {% endif %}
+            </form>
+        </div>
+
+        <!-- Hints section -->
+        <div class="hints-container">
+            <h4 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 1rem;">Hints</h4>
+            
+            <div class="hint-item">
+                <div class="hint-trigger" data-hint-idx="1">
+                    <span>Hint 1: Passphrase Hash Calculation</span>
+                    <span class="hint-icon">▶</span>
+                </div>
+                <div class="hint-content" id="hint-content-1"></div>
+            </div>
+
+            <div class="hint-item">
+                <div class="hint-trigger" data-hint-idx="2">
+                    <span>Hint 2: Execution</span>
+                    <span class="hint-icon">▶</span>
+                </div>
+                <div class="hint-content" id="hint-content-2"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

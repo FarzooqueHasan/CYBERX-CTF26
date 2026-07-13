@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}CyberX CTF - Level 3 Login{% endblock %}
+
+{% block content %}
+<div class="level-container" style="max-width: 500px; margin: 4rem auto;">
+    <div style="margin-bottom: 2rem; text-align: center;">
+        <h2 style="font-size: 1.6rem; letter-spacing: -0.5px;">Telemetry Portal</h2>
+        <p style="color: var(--text-muted); font-size: 0.8rem;">LEVEL 03 AUTHENTICATION</p>
+    </div>
+
+    {% if request.query_params.get('error') %}
+        <div class="alert alert-error" style="margin-bottom: 1.5rem;">
+            ❌ ACCESS DENIED: Invalid login credentials or session token expired.
+        </div>
+    {% endif %}
+
+    <div class="cyber-card">
+        <h3 style="font-size: 1.1rem; margin-bottom: 1.5rem; text-align: center;">Portal Authentication</h3>
+        
+        <form action="/level/3/login" method="POST">
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" id="username" name="username" required placeholder="Enter username" class="form-input code-font">
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Passphrase</label>
+                <input type="password" id="password" name="password" required placeholder="••••••••••••" class="form-input code-font">
+            </div>
+
+            <div style="background: rgba(59, 130, 246, 0.03); border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; margin-bottom: 1.5rem; font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+                <span style="color: var(--text-primary); font-weight: 600;">Recovery Notice:</span><br>
+                Use the credentials extracted from the Level 2 payload. The operator username is given in the JSON. The access password is the <strong>first 12 hex characters of the SHA-1 hash</strong> of the Level 2 flag.
+            </div>
+
+            <button type="submit" class="btn" style="width: 100%;">Submit</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

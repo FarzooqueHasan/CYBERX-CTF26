@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}CyberX CTF - Session Portal{% endblock %}
+
+{% block content %}
+<div class="portal-container" style="max-width: 500px; margin: 4rem auto;">
+    {% if request.query_params.get('error') %}
+        <div class="alert alert-error" style="margin-bottom: 1.5rem;">
+            ❌ ACCESS DENIED: {{ request.query_params.get('error') }}
+        </div>
+    {% endif %}
+
+    <div class="cyber-card">
+        <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem; text-align: center; letter-spacing: -0.5px;">Portal Authentication</h2>
+        <p style="text-align: center; font-size: 0.9rem; margin-bottom: 2rem; color: var(--text-muted);">Please enter your official school email ID to register or resume your session.</p>
+
+        <form action="/register" method="POST">
+            <div class="form-group">
+                <label for="team_name" class="form-label">School Email ID</label>
+                <input type="email" id="team_name" name="team_name" required placeholder="username@dpsrkp.net" class="form-input" pattern="^[a-zA-Z0-9._%+-]+@dpsrkp\.net$">
+            </div>
+
+            <div style="background: rgba(59, 130, 246, 0.05); border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; margin-bottom: 1.5rem; font-size: 0.85rem; color: var(--text-muted); font-family: var(--font-sans);">
+                <span style="color: var(--secondary); font-weight: 600;">[!] Session Persistence Notice:</span><br>
+                Progress is tracked per email ID. Re-entering your email ID on any machine will restore your active session, progress history, and leaderboard ranking.
+            </div>
+
+            <button type="submit" class="btn" style="width: 100%;">Enter Portal</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

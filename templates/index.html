@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}CyberX CTF - Ground Station Intercept{% endblock %}
+
+{% block content %}
+<div class="level-container">
+    <div style="text-align: center; margin-bottom: 3rem;">
+        <h1 style="font-size: 2.25rem; margin-bottom: 0.5rem; letter-spacing: -0.5px;">Operation: AEROSS Downlink</h1>
+        <p style="font-family: var(--font-mono); color: var(--secondary); font-size: 0.9rem;">SECURE NETWORK INDUCTION PORTAL v3.11.6</p>
+    </div>
+
+    <div class="terminal">
+        <div class="terminal-header">
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
+            <span class="terminal-dot"></span>
+            <span class="terminal-title">AEROSS_DECODE.SH</span>
+        </div>
+        <div class="terminal-body">
+            <p class="terminal-prompt">cat mission_brief.txt</p>
+            <p style="color: var(--text-primary); margin-bottom: 1.5rem; opacity: 0.9;">
+                [+] OPERATION SUMMARY:<br>
+                A ground station controlling the AEROSS-3 satellite has been compromised. The operators managed to lock down their terminal, rotating session passwords and encrypting telemetry. However, in their haste, they left behind traces of their system settings and local logs.<br><br>
+                [+] OBJECTIVES:<br>
+                1. INTERCEPT: Query local server paths and recover the encoded signal log.<br>
+                2. DECRYPT: Use the recovered signal to extract the raw JSON data block containing operator identifiers.<br>
+                3. BREACH: Authenticate with the dashboard and pivot to view privileged administrative telemetry.<br>
+                4. RECOVER: Locate the crashed device memory image, analyze the stego layout, and extract the system override flags.<br><br>
+                [!] NO SQL INJECTION IS PERMITTED OR REQUIRED. ALL LOGIC IS SECURED SERVER-SIDE.
+            </p>
+            <p class="terminal-prompt">status --check</p>
+            <p style="color: var(--secondary); opacity: 0.9;">
+                [!] Connection: SECURE<br>
+                [!] Database status: ACTIVE<br>
+                [!] Awaiting operator credentials to initialize decryption pipeline...
+            </p>
+        </div>
+    </div>
+
+    <div style="text-align: center;">
+        {% if team %}
+            <a href="/dashboard" class="btn btn-purple">Return to Operation Center</a>
+        {% else %}
+            <a href="/register" class="btn">Initialize Operator Session</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

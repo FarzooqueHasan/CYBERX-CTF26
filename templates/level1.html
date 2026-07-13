@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}CyberX CTF - Level 1{% endblock %}
+
+{% block content %}
+<div class="level-container">
+    <div style="margin-bottom: 2rem;">
+        <a href="/dashboard" style="color: var(--secondary); text-decoration: none; font-size: 0.9rem;">&lt; Return to Dashboard</a>
+        <h1 style="margin-top: 1rem; font-size: 1.8rem; letter-spacing: -0.5px;">Node 01: Recon & Log Analysis</h1>
+        <p style="color: var(--text-muted);">Status: {% if solved %}<span style="color: var(--success); font-weight: 600;">Solved</span>{% else %}<span style="color: var(--primary);">Active</span>{% endif %}</p>
+    </div>
+
+    <div class="cyber-card">
+        <h3 style="font-size: 1.05rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem;">Challenge Description</h3>
+        <p>The system stores diagnostic logs in a hidden directory. Standard directory listing is disabled on the server, but a custom clue can be found in the response headers of the landing page.</p>
+        <p>Locate the log directory path, retrieve the log file matching your email ID, and extract the encoded flag string. The flag has been encoded in three layers: <strong>Base64 -> Hex -> ROT13</strong>. Decode the string to recover the flag format: <code style="color: var(--secondary); font-family: var(--font-mono);">CYBERX{...}</code>.</p>
+        
+        <div class="challenge-box" style="margin-top: 2rem;">
+            <form id="flag-submit-form" action="/level/submit" method="POST">
+                <div class="form-group">
+                    <label for="flag" class="form-label">Submit Decoded Flag</label>
+                    <input type="text" id="flag" name="flag" required placeholder="CYBERX{flag_here}" class="form-input code-font" {% if solved %}disabled value="CYBERX{r3c0n_b3f0r3_4ss4ult}"{% endif %}>
+                </div>
+                
+                <div id="response-alert" class="alert" style="display: none;"></div>
+
+                {% if not solved %}
+                    <button type="submit" class="btn" style="width: 100%;">Submit Flag</button>
+                {% else %}
+                    <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 6px; padding: 1rem; text-align: center; color: var(--success); font-size: 0.9rem;">
+                        [+] Flag verified. Node 01 completed.
+                    </div>
+                {% endif %}
+            </form>
+        </div>
+
+        <!-- Hints section -->
+        <div class="hints-container">
+            <h4 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 1rem;">Hints</h4>
+            
+            <div class="hint-item">
+                <div class="hint-trigger" data-hint-idx="1">
+                    <span>Hint 1: HTTP Response Headers</span>
+                    <span class="hint-icon">▶</span>
+                </div>
+                <div class="hint-content" id="hint-content-1"></div>
+            </div>
+
+            <div class="hint-item">
+                <div class="hint-trigger" data-hint-idx="2">
+                    <span>Hint 2: robots.txt Configuration</span>
+                    <span class="hint-icon">▶</span>
+                </div>
+                <div class="hint-content" id="hint-content-2"></div>
+            </div>
+
+            <div class="hint-item">
+                <div class="hint-trigger" data-hint-idx="3">
+                    <span>Hint 3: Encoding Layers</span>
+                    <span class="hint-icon">▶</span>
+                </div>
+                <div class="hint-content" id="hint-content-3"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
