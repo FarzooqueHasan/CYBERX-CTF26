@@ -3,8 +3,6 @@ import os
 
 if os.environ.get("VERCEL"):
     DB_PATH = "/tmp/ctf.db"
-elif os.path.exists("/data"):
-    DB_PATH = "/data/ctf.db"
 else:
     DB_PATH = os.path.join(os.path.dirname(__file__), "ctf.db")
 
