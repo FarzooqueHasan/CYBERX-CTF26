@@ -1,36 +1,70 @@
 {% extends "base.html" %}
 
-{% block title %}CyberX CTF - Induction{% endblock %}
+{% block title %}CyberX Induction CTF{% endblock %}
 
 {% block content %}
-<div class="level-container" style="max-width: 650px; margin: 4rem auto;">
-    <div style="text-align: center; margin-bottom: 3rem;">
-        <h1 style="font-size: 2.25rem; margin-bottom: 0.5rem; letter-spacing: -0.5px;">CyberX Club Induction</h1>
-        <p style="font-family: var(--font-mono); color: var(--secondary); font-size: 0.9rem;">SECURE CHALLENGE PORTAL</p>
-    </div>
+<div style="max-width: 640px; padding-top: 1.5rem;">
 
-    <div class="cyber-card" style="margin-bottom: 3rem; padding: 2rem;">
-        <h3 style="font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1.25rem;">Challenge Overview</h3>
-        <p style="color: var(--text-primary); line-height: 1.7; margin-bottom: 1.5rem;">
-            Welcome to the official CyberX Club Induction CTF. This pipeline tests foundational skills in cybersecurity across four distinct categories:
+    <div style="margin-bottom: 2.5rem;">
+        <h1>CyberX Induction CTF</h1>
+        <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 1.5rem;">2026 Selection Assessment</p>
+
+        <p style="color: var(--text-secondary); max-width: 520px;">
+            A technical assessment covering core cybersecurity skills. Challenges must be completed
+            sequentially. Each solution provides context or credentials for the next.
         </p>
-        <ul style="color: var(--text-muted); line-height: 1.8; margin-bottom: 2rem; padding-left: 1.2rem;">
-            <li><strong>Recon & Log Analysis</strong>: Directory enumeration and log parsing.</li>
-            <li><strong>Decryption & Key Derivation</strong>: Cryptographic key expansion and symmetric payload decryption.</li>
-            <li><strong>Identity & Access Control</strong>: Inspecting network APIs and identifying privilege escalation flaws.</li>
-            <li><strong>Image Steganography Analysis</strong>: Bitwise LSB extraction using custom Python scripts.</li>
-        </ul>
-        <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.15); border-radius: 6px; padding: 1rem; font-size: 0.85rem; color: #f87171;">
-            <strong>Notice:</strong> Out-of-bounds scanning, directory brute-forcing, and SQL injection are strictly prohibited. All answers are derived from logical analysis.
-        </div>
-    </div>
 
-    <div style="text-align: center;">
+        <div class="assessment-facts">
+            <span>04 challenges</span>
+            <span class="fact-sep">·</span>
+            <span>Individual participation</span>
+            <span class="fact-sep">·</span>
+            <span>Sequential progression</span>
+        </div>
+
         {% if team %}
-            <a href="/dashboard" class="btn">Access Dashboard</a>
+            <a href="/dashboard" class="btn">Go to dashboard</a>
         {% else %}
-            <a href="/register" class="btn" style="padding: 0.8rem 2.5rem; font-size: 1rem;">Access Portal</a>
+            <a href="/register" class="btn">Enter assessment</a>
         {% endif %}
     </div>
+
+    <hr class="section-divider">
+
+    <div style="margin-bottom: 2.5rem;">
+        <div class="section-label">Assessment scope</div>
+        <ul class="scope-list">
+            <li class="scope-item">
+                <span class="scope-num">01</span>
+                <span class="scope-text">Reconnaissance &amp; log analysis</span>
+            </li>
+            <li class="scope-item">
+                <span class="scope-num">02</span>
+                <span class="scope-text">Cryptography</span>
+            </li>
+            <li class="scope-item">
+                <span class="scope-num">03</span>
+                <span class="scope-text">Identity &amp; access control</span>
+            </li>
+            <li class="scope-item">
+                <span class="scope-num">04</span>
+                <span class="scope-text">Image steganography</span>
+            </li>
+        </ul>
+    </div>
+
+    <hr class="section-divider">
+
+    <div>
+        <div class="section-label">Rules</div>
+        <p style="color: var(--text-secondary); max-width: 520px; margin-bottom: 0.5rem;">
+            Out-of-scope scanning, automated brute-force attempts, and SQL injection are prohibited.
+            All challenges can be solved through logical analysis of the provided resources.
+        </p>
+        <p style="color: var(--text-secondary); max-width: 520px; margin-bottom: 0;">
+            Progress is linked to your email address and persists across sessions and devices.
+        </p>
+    </div>
+
 </div>
 {% endblock %}

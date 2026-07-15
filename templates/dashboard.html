@@ -1,95 +1,115 @@
 {% extends "base.html" %}
 
-{% block title %}CyberX CTF - Dashboard{% endblock %}
+{% block title %}Dashboard — CyberX Induction CTF{% endblock %}
 
 {% block content %}
-<div style="margin-bottom: 3rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1.5rem;">
-    <div>
-        <h1 style="font-size: 1.8rem; letter-spacing: -0.5px; margin-bottom: 0.25rem;">CyberX Induction Dashboard</h1>
-        <p style="color: var(--text-muted); margin-bottom: 0;">Session: {{ team.team_name }}</p>
-    </div>
-    {% if current_level <= 4 %}
-        <a href="/level" class="btn" style="padding: 0.75rem 1.6rem; font-weight: 600;">Access Active Challenge</a>
-    {% else %}
-        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid var(--success); color: var(--success); padding: 0.6rem 1.2rem; border-radius: 6px; font-weight: 600; font-size: 0.9rem;">
-            ✓ Induction Completed
-        </div>
-    {% endif %}
-</div>
+<div style="padding-top: 1rem;">
 
-<div class="grid-2">
-    <!-- Left panel: Level Progress Table -->
-    <div>
-        <h2 style="font-size: 1.15rem; font-weight: 600; margin-bottom: 1.5rem;">
-            Induction Progress
-        </h2>
-        
-        <div class="level-grid" style="display: flex; flex-direction: column; gap: 0.75rem;">
-            {% for lvl in levels %}
-                <div class="level-card {{ lvl.status }}" style="padding: 1.2rem 1.5rem; flex-direction: row; justify-content: space-between; align-items: center;">
-                    <div>
-                        <span class="level-num" style="display: block; margin-bottom: 0.2rem;">NODE 0{{ lvl.number }}</span>
-                        <h3 style="font-size: 1rem; margin-bottom: 0; font-weight: 600;">
-                            {% if lvl.number == 1 %}
-                                Recon & Log Analysis
-                            {% elif lvl.number == 2 %}
-                                Decryption & Key Derivation
-                            {% elif lvl.number == 3 %}
-                                Identity & Access Control
-                            {% elif lvl.number == 4 %}
-                                Image Steganography Analysis
-                            {% endif %}
-                        </h3>
-                        {% if lvl.status == 'solved' %}
-                            <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">Solved: {{ lvl.solved_at.split('T')[0] }} {{ lvl.solved_at.split('T')[1][:8] }}</span>
-                        {% endif %}
-                    </div>
-                    <div>
-                        <span class="level-badge {{ lvl.status }}">{{ lvl.status }}</span>
-                    </div>
-                </div>
-            {% endfor %}
+    <!-- Page header (no repeated user/signout — those are in the global nav) -->
+    <div style="margin-bottom: 0.5rem;">
+        <h1 style="font-size: 20px;">CyberX / Induction CTF</h1>
+    </div>
+    <p class="progress-label">
+        Progress
+        <span>{{ levels | selectattr('status', 'equalto', 'solved') | list | length }} / 4</span>
+
+        {% if current_level > 4 %}
+            &ensp;·&ensp; <span style="color: var(--success);">Assessment complete</span>
+        {% endif %}
+    </p>
+
+    <!-- Challenges -->
+    <div class="section-label">Challenges</div>
+
+    <div class="challenge-list">
+        <div class="challenge-list-header">
+            <span>ID</span>
+            <span>Challenge</span>
+            <span>Category</span>
+            <span>Status</span>
+            <span></span>
         </div>
+
+        {% set challenge_names = [
+            'Reconnaissance & log analysis',
+            'Key derivation',
+            'Identity',
+            'LSB extraction'
+        ] %}
+        {% set challenge_categories = [
+            'Forensics',
+            'Cryptography',
+            'Web',
+            'Steganography'
+        ] %}
+
+        {% for lvl in levels %}
+        <div class="challenge-row {{ lvl.status }}{% if lvl.status == 'active' %} active{% endif %}">
+            <span class="row-id">0{{ lvl.number }}</span>
+            <span class="row-name" data-id="0{{ lvl.number }}">{{ challenge_names[lvl.number - 1] }}</span>
+            <span class="row-category">{{ challenge_categories[lvl.number - 1] }}</span>
+            <span class="row-status">
+                {% if lvl.status == 'solved' %}
+                    <span class="status-label solved">Solved</span>
+                {% elif lvl.status == 'active' %}
+                    <span class="status-label available">Available</span>
+                {% else %}
+                    <span class="status-label locked">Locked</span>
+                {% endif %}
+            </span>
+            <span class="row-action">
+                {% if lvl.status == 'active' %}
+                    <a href="/level" class="row-action">Open</a>
+                {% elif lvl.status == 'solved' %}
+                    {% if lvl.solved_at %}
+                        <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);">
+                            {{ lvl.solved_at.split('T')[0] }}
+                        </span>
+                    {% endif %}
+                {% endif %}
+            </span>
+        </div>
+        {% endfor %}
     </div>
 
-    <!-- Right panel: Leaderboard -->
-    <div>
-        <h2 style="font-size: 1.15rem; font-weight: 600; margin-bottom: 1.5rem;">
-            Leaderboard Rankings
-        </h2>
- 
-        <div class="cyber-card" style="padding: 1.2rem 1.5rem;">
-            <table class="leaderboard-table">
-                <thead>
-                    <tr>
-                        <th style="width: 15%;">Rank</th>
-                        <th style="width: 50%;">User Email</th>
-                        <th style="width: 20%; text-align: center;">Solved</th>
-                        <th style="width: 15%; text-align: right;">Last Solve</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in leaderboard %}
-                        <tr>
-                            <td>{{ loop.index }}</td>
-                            <td style="font-family: var(--font-mono); font-size: 0.85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 150px;">{{ row.team_name }}</td>
-                            <td style="text-align: center; font-family: var(--font-mono); color: var(--secondary); font-size: 0.85rem;">{{ row.solved_count }} / 4</td>
-                            <td style="text-align: right; font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">
-                                {% if row.last_solve_time %}
-                                    {{ row.last_solve_time.split('T')[1][:8] }}
-                                {% else %}
-                                    --:--:--
-                                {% endif %}
-                            </td>
-                        </tr>
+    <hr class="section-divider">
+
+    <!-- Leaderboard -->
+    <div class="section-label">Leaderboard</div>
+
+    <table class="lb-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Participant</th>
+                <th>Solved</th>
+                <th>Last solve</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in leaderboard %}
+            <tr>
+                <td class="lb-rank">{{ loop.index }}</td>
+                <td class="lb-participant">{{ row.team_name }}</td>
+                <td class="lb-solved">{{ row.solved_count }} / 4</td>
+                <td class="lb-time">
+                    {% if row.last_solve_time %}
+                        {{ row.last_solve_time.split('T')[0] }}
+                        <span style="color: var(--text-muted);">{{ row.last_solve_time.split('T')[1][:8] }}</span>
                     {% else %}
-                        <tr>
-                            <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem; font-size: 0.9rem;">No registered sessions found.</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+                        —
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4" style="color: var(--text-muted); padding: 1.5rem 0.75rem; font-size: 13px;">
+                    No participants yet.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
 </div>
 {% endblock %}

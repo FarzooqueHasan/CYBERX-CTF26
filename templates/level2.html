@@ -1,70 +1,129 @@
 {% extends "base.html" %}
 
-{% block title %}CyberX CTF - Level 2{% endblock %}
+{% block title %}02 / Cryptography — CyberX Induction CTF{% endblock %}
 
 {% block content %}
-<div class="level-container">
-    <div style="margin-bottom: 2rem;">
-        <a href="/dashboard" style="color: var(--secondary); text-decoration: none; font-size: 0.9rem;">&lt; Return to Dashboard</a>
-        <h1 style="margin-top: 1rem; font-size: 1.8rem; letter-spacing: -0.5px;">Node 02: Decryption & Key Derivation</h1>
-        <p style="color: var(--text-muted);">Status: {% if solved %}<span style="color: var(--success); font-weight: 600;">Solved</span>{% else %}<span style="color: var(--primary);">Active</span>{% endif %}</p>
+<div class="challenge-container">
+
+    <a href="/dashboard" class="back-link">← Challenges</a>
+
+    <!-- Title row -->
+    <div class="challenge-title-row">
+        <span class="challenge-id">02</span>
+        <h1 style="font-size: 22px;">Cryptography</h1>
+        {% if solved %}
+            <span class="status-label solved" style="margin-left: auto;">Solved</span>
+        {% else %}
+            <span class="status-label available" style="margin-left: auto;">Available</span>
+        {% endif %}
     </div>
 
-    <div class="cyber-card">
-        <h3 style="font-size: 1.05rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem;">Challenge Description</h3>
-        <p>Download the encrypted payload <code>intercept.bin</code>. The payload was encrypted using symmetric cryptography. You need to decrypt the payload using the parameters below to extract the flag and the credentials for the next node.</p>
-        
-        <div style="background: rgba(59, 130, 246, 0.03); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem; font-family: var(--font-sans); font-size: 0.95rem; line-height: 1.8;">
-            <span style="color: var(--text-primary); font-weight: 600;">PAYLOAD DETAILS:</span><br>
-            - <span style="color: var(--text-muted);">Algorithm:</span> AES-256-CBC<br>
-            - <span style="color: var(--text-muted);">Initialization Vector (hex):</span> {{ iv_hex }}<br>
-            - <span style="color: var(--text-muted);">Key:</span> SHA-256 hash of the Level 1 flag (UTF-8 bytes, no newlines)
+    <p class="challenge-subtitle">Key Derivation — Decrypt the intercepted payload to recover the flag.</p>
+
+    <!-- Metadata -->
+    <div class="meta-list">
+        <div class="meta-item">
+            <span class="meta-key">Difficulty</span>
+            <span class="meta-value">Intermediate</span>
         </div>
-
-        <div class="challenge-action">
-            <a href="/level/download" class="btn" style="font-size: 0.9rem; padding: 0.6rem 1.5rem;">Download intercept.bin</a>
+        <div class="meta-item">
+            <span class="meta-key">Category</span>
+            <span class="meta-value">Cryptography</span>
         </div>
-
-        <div class="challenge-box" style="margin-top: 2rem;">
-            <form id="flag-submit-form" action="/level/submit" method="POST">
-                <div class="form-group">
-                    <label for="flag" class="form-label">Submit Decrypted Flag</label>
-                    <input type="text" id="flag" name="flag" required placeholder="CYBERX{flag_here}" class="form-input code-font" {% if solved %}disabled value="CYBERX{k3y_fr0m_ch405}"{% endif %}>
-                </div>
-                
-                <div id="response-alert" class="alert" style="display: none;"></div>
-
-                {% if not solved %}
-                    <button type="submit" class="btn" style="width: 100%;">Submit Flag</button>
-                {% else %}
-                    <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 6px; padding: 1rem; text-align: center; color: var(--success); font-size: 0.9rem;">
-                        [+] Flag verified. Assigned operator username: <span style="color: var(--secondary); font-weight: 600;">gs_analyst04</span>. Node 02 completed.
-                    </div>
-                {% endif %}
-            </form>
+        <div class="meta-item">
+            <span class="meta-key">Points</span>
+            <span class="meta-value">200 pts</span>
         </div>
-
-        <!-- Hints section -->
-        <div class="hints-container">
-            <h4 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 1rem;">Hints</h4>
-            
-            <div class="hint-item">
-                <div class="hint-trigger" data-hint-idx="1">
-                    <span>Hint 1: Key Derivation Parameters</span>
-                    <span class="hint-icon">▶</span>
-                </div>
-                <div class="hint-content" id="hint-content-1"></div>
-            </div>
-
-            <div class="hint-item">
-                <div class="hint-trigger" data-hint-idx="2">
-                    <span>Hint 2: Decryption Script</span>
-                    <span class="hint-icon">▶</span>
-                </div>
-                <div class="hint-content" id="hint-content-2"></div>
-            </div>
-        </div>
-
     </div>
+
+    <hr class="section-divider" style="margin-top: 1rem; margin-bottom: 1.5rem;">
+
+    <!-- Challenge brief -->
+    <div class="section-label">Challenge brief</div>
+    <div class="challenge-description">
+        <p>Download the encrypted payload <code>intercept.bin</code>. The payload was encrypted using symmetric cryptography. Decrypt it using the parameters below to extract the flag and credentials for the next challenge.</p>
+    </div>
+
+    <!-- Payload parameters -->
+    <div class="section-label" style="margin-top: 1.25rem;">Payload parameters</div>
+    <table class="param-table">
+        <tr>
+            <td>Algorithm</td>
+            <td>AES-256-CBC</td>
+        </tr>
+        <tr>
+            <td>IV (hex)</td>
+            <td>{{ iv_hex }}</td>
+        </tr>
+        <tr>
+            <td>Key</td>
+            <td>SHA-256 of the Level 1 flag (UTF-8 bytes, no newline)</td>
+        </tr>
+    </table>
+
+    <!-- Resources -->
+    <div class="section-label" style="margin-top: 1.75rem;">Resources</div>
+    <div class="resource-list">
+        <div class="resource-row">
+            <span class="resource-name">intercept.bin</span>
+            <div class="resource-meta">
+                <a href="/level/download" class="btn-link">Download</a>
+            </div>
+        </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- Submit flag -->
+    <div class="flag-section">
+        <div class="section-label">Submit flag</div>
+
+        <form id="flag-submit-form" action="/level/submit" method="POST">
+            <div class="form-group">
+                <label for="flag" class="form-label">Flag</label>
+                <input
+                    type="text"
+                    id="flag"
+                    name="flag"
+                    required
+                    placeholder="cyberx{...}"
+                    class="form-input mono"
+                    {% if solved %}disabled value="CYBERX{k3y_fr0m_ch405}"{% endif %}
+                >
+            </div>
+
+            <div id="response-alert" class="alert" style="display: none;"></div>
+
+            {% if not solved %}
+                <button type="submit" class="btn">Submit</button>
+            {% else %}
+                <p class="solved-notice">Flag verified — operator username: <code>gs_analyst04</code>. Challenge complete.</p>
+            {% endif %}
+        </form>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- Hints -->
+    <div class="hints-section">
+        <div class="section-label">Hints</div>
+
+        <div class="hint-item">
+            <button class="hint-trigger" data-hint-idx="1">
+                <span>Hint 1 — key derivation parameters</span>
+                <span class="hint-icon">▶</span>
+            </button>
+            <div class="hint-content" id="hint-content-1"></div>
+        </div>
+
+        <div class="hint-item">
+            <button class="hint-trigger" data-hint-idx="2">
+                <span>Hint 2 — decryption script</span>
+                <span class="hint-icon">▶</span>
+            </button>
+            <div class="hint-content" id="hint-content-2"></div>
+        </div>
+    </div>
+
 </div>
 {% endblock %}

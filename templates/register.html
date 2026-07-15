@@ -1,32 +1,40 @@
 {% extends "base.html" %}
 
-{% block title %}CyberX CTF - Session Portal{% endblock %}
+{% block title %}Sign in — CyberX Induction CTF{% endblock %}
 
 {% block content %}
-<div class="portal-container" style="max-width: 500px; margin: 4rem auto;">
+<div style="max-width: 400px; padding-top: 2rem;">
+
+    <h1 style="font-size: 22px; margin-bottom: 0.4rem;">Sign in</h1>
+    <p style="margin-bottom: 2rem;">Enter your school email address to register or resume a session.</p>
+
     {% if request.query_params.get('error') %}
-        <div class="alert alert-error" style="margin-bottom: 1.5rem;">
-            ❌ ACCESS DENIED: {{ request.query_params.get('error') }}
-        </div>
+        <p style="color: var(--error); font-size: 13px; margin-bottom: 1rem;">
+            {{ request.query_params.get('error') }}
+        </p>
     {% endif %}
 
-    <div class="cyber-card">
-        <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem; text-align: center; letter-spacing: -0.5px;">Portal Authentication</h2>
-        <p style="text-align: center; font-size: 0.9rem; margin-bottom: 2rem; color: var(--text-muted);">Please enter your official school email ID to register or resume your session.</p>
+    <form action="/register" method="POST">
+        <div class="form-group">
+            <label for="team_name" class="form-label">School email</label>
+            <input
+                type="email"
+                id="team_name"
+                name="team_name"
+                required
+                placeholder="username@dpsrkp.net"
+                class="form-input"
+                pattern="^[a-zA-Z0-9._%+-]+@dpsrkp\.net$"
+                autocomplete="email"
+            >
+        </div>
 
-        <form action="/register" method="POST">
-            <div class="form-group">
-                <label for="team_name" class="form-label">School Email ID</label>
-                <input type="email" id="team_name" name="team_name" required placeholder="username@dpsrkp.net" class="form-input" pattern="^[a-zA-Z0-9._%+-]+@dpsrkp\.net$">
-            </div>
+        <p class="form-note" style="margin-bottom: 1.5rem;">
+            Progress is linked to your email address. Re-entering your email on any machine restores your session, progress, and leaderboard position.
+        </p>
 
-            <div style="background: rgba(59, 130, 246, 0.05); border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; margin-bottom: 1.5rem; font-size: 0.85rem; color: var(--text-muted); font-family: var(--font-sans);">
-                <span style="color: var(--secondary); font-weight: 600;">[!] Session Persistence Notice:</span><br>
-                Progress is tracked per email ID. Re-entering your email ID on any machine will restore your active session, progress history, and leaderboard ranking.
-            </div>
+        <button type="submit" class="btn" style="width: 100%;">Continue</button>
+    </form>
 
-            <button type="submit" class="btn" style="width: 100%;">Enter Portal</button>
-        </form>
-    </div>
 </div>
 {% endblock %}

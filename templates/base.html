@@ -3,26 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}CyberX CTF - Induction{% endblock %}</title>
+    <title>{% block title %}CyberX Induction CTF{% endblock %}</title>
+    <meta name="description" content="CyberX Club Induction CTF — 2026 Selection Assessment">
     <link rel="stylesheet" href="/static/css/style.css">
     {% block extra_head %}{% endblock %}
 </head>
 <body>
     <header>
-        <div class="navbar">
-            <a href="/" class="logo">CyberX Club</a>
-            <div class="nav-links">
+        <nav class="navbar">
+            <a href="/" class="nav-logo">CyberX</a>
+            <div class="nav-right">
                 {% if team %}
-                    <a href="/dashboard" class="nav-item">Dashboard</a>
-                    <span class="nav-team">User: {{ team.team_name }}</span>
+                    <span class="nav-user">{{ team.team_name }}</span>
                     <form action="/logout" method="post" style="display:inline;">
-                        <button type="submit" class="nav-item" style="background:none; border:none; cursor:pointer; font-family:inherit;">Logout</button>
+                        <button type="submit" class="nav-action">Sign out</button>
                     </form>
                 {% else %}
-                    <a href="/register" class="btn btn-purple" style="padding: 0.4rem 1.2rem; font-size: 0.85rem;">Login</a>
+                    <a href="/register" class="nav-action">Sign in</a>
                 {% endif %}
             </div>
-        </div>
+        </nav>
     </header>
 
     <main class="container">

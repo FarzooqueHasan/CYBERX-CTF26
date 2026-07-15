@@ -1,47 +1,47 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Reveal Hint Content via server-side fetch
+    // 1. Hint accordion — fetch hint content from server
     const hintTriggers = document.querySelectorAll('.hint-trigger');
     hintTriggers.forEach(trigger => {
         trigger.addEventListener('click', async () => {
             const index = trigger.getAttribute('data-hint-idx');
             const content = document.getElementById(`hint-content-${index}`);
+            const icon = trigger.querySelector('.hint-icon');
+
             if (content.style.display === 'block') {
                 content.style.display = 'none';
-                trigger.querySelector('.hint-icon').textContent = '▶';
+                icon.textContent = '▶';
             } else {
                 if (content.textContent.trim() === '' || content.innerHTML.trim() === '') {
-                    content.innerHTML = '<p style="margin-bottom: 0; color: var(--text-muted); font-size: 0.85rem;">Fetching hint...</p>';
+                    content.innerHTML = '<p style="margin-bottom: 0; color: var(--text-muted); font-size: 13px;">Loading…</p>';
                     content.style.display = 'block';
-                    trigger.querySelector('.hint-icon').textContent = '▼';
+                    icon.textContent = '▼';
                     try {
                         const response = await fetch(`/level/hint/${index}`);
-                        if (!response.ok) {
-                            throw new Error('Failed to load hint');
-                        }
+                        if (!response.ok) throw new Error('Failed to load hint');
                         const data = await response.json();
                         content.innerHTML = `<p style="margin-bottom: 0;">${data.hint}</p>`;
                     } catch (err) {
-                        content.innerHTML = '<p style="margin-bottom: 0; color: var(--error); font-size: 0.85rem;">Error loading hint.</p>';
+                        content.innerHTML = '<p style="margin-bottom: 0; color: var(--error); font-size: 13px;">Could not load hint.</p>';
                     }
                 } else {
                     content.style.display = 'block';
-                    trigger.querySelector('.hint-icon').textContent = '▼';
+                    icon.textContent = '▼';
                 }
             }
         });
     });
 
-    // 2. AJAX Flag Submission
+    // 2. AJAX flag submission
     const flagForm = document.getElementById('flag-submit-form');
     if (flagForm) {
         flagForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const actionUrl = flagForm.getAttribute('action');
             const formData = new FormData(flagForm);
-            
+
             const submitBtn = flagForm.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.textContent;
-            submitBtn.textContent = 'VALIDATING...';
+            submitBtn.textContent = 'Checking…';
             submitBtn.disabled = true;
 
             const responseAlert = document.getElementById('response-alert');
@@ -55,30 +55,29 @@ document.addEventListener('DOMContentLoaded', () => {
                     method: 'POST',
                     body: formData
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (response.ok && data.status === 'correct') {
-                    responseAlert.textContent = 'FLAG CORRECT. ACCESS DECRYPTED. REDIRECTING...';
+                    responseAlert.textContent = 'Correct. Proceeding to next challenge…';
                     responseAlert.className = 'alert alert-success';
                     responseAlert.style.display = 'flex';
                     setTimeout(() => {
                         window.location.href = '/level';
                     }, 1500);
                 } else if (data.status === 'cooldown') {
-                    responseAlert.textContent = `RATE LIMIT EXCEEDED: ${data.message || 'Cooldown active.'}`;
+                    responseAlert.textContent = `Rate limit — please wait. ${data.message || ''}`.trim();
                     responseAlert.className = 'alert alert-error';
                     responseAlert.style.display = 'flex';
                     submitBtn.textContent = originalBtnText;
                     submitBtn.disabled = false;
                 } else {
-                    responseAlert.textContent = 'DECRYPTION FAILED: Flag incorrect. Attempts counter incremented.';
+                    responseAlert.textContent = 'Incorrect flag. Try again.';
                     responseAlert.className = 'alert alert-error';
                     responseAlert.style.display = 'flex';
                     submitBtn.textContent = originalBtnText;
                     submitBtn.disabled = false;
-                    
-                    // Reload attempts counter if visible
+
                     const attemptsCounter = document.getElementById('attempts-count');
                     if (attemptsCounter) {
                         let count = parseInt(attemptsCounter.textContent) || 0;
@@ -86,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             } catch (err) {
-                responseAlert.textContent = 'NETWORK ERROR: Connection timed out.';
+                responseAlert.textContent = 'Network error. Please try again.';
                 responseAlert.className = 'alert alert-error';
                 responseAlert.style.display = 'flex';
                 submitBtn.textContent = originalBtnText;
